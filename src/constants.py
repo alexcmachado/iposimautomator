@@ -6,7 +6,6 @@ AUTHOR = "Alex Costa Machado"
 BUILD_ICON_PATH = "./src/images/iposim.ico"
 
 # driver
-BROWSER_NAME = "FIREFOX"
 # HEADLESS = True
 # WITH_PROXY = False
 MAX_SIMULATION_TIME = 300
