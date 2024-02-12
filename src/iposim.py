@@ -1,12 +1,13 @@
+"""Main module of the Iposim Automator application."""
+
 import os
 import platform
 import threading
-from tkinter import *
-from tkinter import messagebox
+import sys
+from tkinter import Frame, StringVar, messagebox, LEFT, X
 from tkinter.filedialog import askopenfilename, askdirectory
-from tkinter.ttk import *
-
-from ttkthemes import ThemedTk
+from tkinter.ttk import Style, Button, Entry, Label
+from ttkthemes import ThemedTk  # type: ignore
 
 from constants import NAME, BUILD_ICON_PATH
 from helper_functions.encryption import save_credentials, get_key, load_credentials
@@ -17,6 +18,7 @@ from web_scraper import simulation_pipeline
 
 
 def threaded_button_simulation():
+    """Starts the simulation in a separate thread."""
     if inputs_ok(
         user=user.get(),
         password=password.get(),
@@ -36,30 +38,32 @@ def threaded_button_simulation():
 
 
 def run_simulation():
+    """Runs the simulation and disables the button while it is running."""
     try:
         sim_button.config(state="disabled")
         simulation_pipeline(
             user.get(), password.get(), filename.get(), output_dir.get()
         )
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         logger.error(e)
-        logger.debug(
-            e, exc_info=sys.exc_info()
-        )  # printa mais informações para o arquivo de erro
+        logger.debug(e, exc_info=sys.exc_info())
     finally:
         sim_button.config(state="normal")
 
 
 def on_closing():
+    """Manages closing of GUI."""
     if messagebox.askokcancel("Quit", "Do you want to quit?"):
         root.destroy()
 
 
 def browse_data():
+    """Opens a file explorer to select the data file."""
     filename.set(askopenfilename(initialdir=curr_dir, title="Select simulation file"))
 
 
 def get_output_dir():
+    """Opens a file explorer to select the output directory."""
     output_dir.set(askdirectory(initialdir=curr_dir, title="Select output path"))
 
 
@@ -109,7 +113,7 @@ login_info = Frame(master=mf)
 login_info.pack(fill=X)
 
 console = Frame(master=mf)
-console.pack(fill="both", expand="yes")
+console.pack(fill="both", expand=1)
 
 # cria um estilo novo de texto negrito que é usado pelo botao de simulate
 s = Style()

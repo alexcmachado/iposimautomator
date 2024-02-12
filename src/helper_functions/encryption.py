@@ -1,3 +1,5 @@
+"""Functions for encrypting and decrypting credentials."""
+
 import json
 import os
 
@@ -5,6 +7,7 @@ from cryptography.fernet import Fernet
 
 
 def save_credentials(credentials_file_path, key, password, filename, output_dir, user):
+    """Save the credentials to a file. Encrypt the file before saving it."""
     credentials = {
         "user": user,
         "password": password,
@@ -19,6 +22,7 @@ def save_credentials(credentials_file_path, key, password, filename, output_dir,
 
 
 def get_key(key_file_path):
+    """Get the key from the key file."""
     try:
         os.mkdir(f"{os.getenv('APPDATA')}/Iposim Automator")
     except FileExistsError:
@@ -37,6 +41,7 @@ def get_key(key_file_path):
 
 
 def load_credentials(credentials_file_path, key, password, filename, output_dir, user):
+    """Load credentials."""
     try:
         with open(credentials_file_path, "rb") as credentials_file:
             encrypted_json_bytes_string = credentials_file.read()

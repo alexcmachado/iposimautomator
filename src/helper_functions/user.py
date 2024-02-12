@@ -1,17 +1,21 @@
+"""This module contains functions for logging in to Iposim."""
+
+import logging
+
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import ActionChains
 
 from helper_functions.driver import wait_and_get_element
-import logging
 
 logger = logging.getLogger(__name__)
 
 
 class UnableToLogin(Exception):
-    pass
+    """Exception raised when unable to log in to Iposim."""
 
 
 def login(login_page, user, password, driver):
+    """Log in to Iposim using the provided credentials."""
     try:
         logger.info("Requesting access to Iposim.")
         driver.get(login_page)
@@ -46,7 +50,7 @@ def login(login_page, user, password, driver):
            /_/ 
         """
         )
-    except TimeoutException:
+    except TimeoutException as exc:
         raise UnableToLogin(
-            "Unable to establish login. Check your e-mail and password or internet connection and try again."
-        )
+            "Unable to login. Check your e-mail and password or internet connection and try again."
+        ) from exc

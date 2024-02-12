@@ -1,3 +1,5 @@
+"""Contains functions to run simulations and retrieve results from Iposim."""
+
 import logging
 import time
 from selenium.common.exceptions import TimeoutException
@@ -10,40 +12,42 @@ logger = logging.getLogger(__name__)
 
 
 class ParametersNotOkError(Exception):
-    pass
+    """Exception raised when the parameters are not ok."""
 
 
 class SimulationTookTooLongError(Exception):
-    pass
+    """Exception raised when the simulation took too long."""
 
 
 def check_for_empty_page(driver):
-    """procura pelo grafico"""
+    """Check if the page is empty."""
     try:
         wait_and_get_element(
-            "#app > div.application--wrap > main > div > div > div > div.flex.main-container.xs12 > "
-            "div.container.fluid.tabs__results > div > div.flex.content.content-large > div.layout.mt-2.mx-1.row.wrap "
+            "#app > div.application--wrap > main > div > div > div > "
+            "div.flex.main-container.xs12 > div.container.fluid.tabs__results > "
+            "div > div.flex.content.content-large > div.layout.mt-2.mx-1.row.wrap "
             "> div:nth-child(1) > div > div.flex.md5.xs12.mx-0 > div > img",
             time_to_wait=30,
             driver=driver,
         )
-    except TimeoutException:
-        raise ParametersNotOkError
+    except TimeoutException as exc:
+        raise ParametersNotOkError from exc
 
 
 def check_for_results_table(driver):
-    """procura pela tabela de resultados no tempo maximo dado por MAX_SIMULATION_TIME"""
+    """Check if the results table is present."""
     try:
         wait_and_get_element(
             ".sim-main-content > div:nth-child(3) > div:nth-child(1) > img:nth-child(2)",
             time_to_wait=MAX_SIMULATION_TIME,
             driver=driver,
         )
-    except TimeoutException:
-        raise SimulationTookTooLongError
+    except TimeoutException as exc:
+        raise SimulationTookTooLongError from exc
 
 
 def get_results(driver):
+    """Get the results from the simulation results page."""
     temp_switch = driver.find_element_by_css_selector(
         get_css_from_table("Maximum Junction Temperature", "Switch")
     )
@@ -66,14 +70,15 @@ def get_results(driver):
         "--------------------------------------------------------------------\nResults:"
     )
     logger.info("    Maximum Junction Temperature:")
-    logger.info("    Switch: {} / Diode: {}".format(temp_switch, temp_diode))
+    logger.info("    Switch: %s / Diode: %s", temp_switch, temp_diode)
     logger.info("    Total Losses:")
-    logger.info("    Switch: {} / Diode: {}\n".format(loss_switch, loss_diode))
+    logger.info("    Switch: %s / Diode: %s\n", loss_switch, loss_diode)
 
     return temp_switch, temp_diode, loss_switch, loss_diode
 
 
 def create_simulation_and_retrieve_result(url, driver):
+    """Create a simulation and retrieve the results."""
     try:
         driver.get(url)
         check_for_empty_page(driver)
@@ -84,26 +89,23 @@ def create_simulation_and_retrieve_result(url, driver):
             "--------------------------------------------------------------------\nResults:"
         )
         logger.info(
-            "Simulation lasted longer than {} seconds. Try changing the parameters.".format(
-                MAX_SIMULATION_TIME
-            )
+            "Simulation lasted longer than %s seconds. Try changing the parameters.",
+            MAX_SIMULATION_TIME,
         )
         return (
-            "Simulation lasted longer than {} seconds".format(MAX_SIMULATION_TIME),
+            "Simulation lasted longer than %s seconds",
+            MAX_SIMULATION_TIME,
         ) * 4
     except ParametersNotOkError:
         logger.info(
             "--------------------------------------------------------------------\nResults:"
         )
-        logger.info(
-            "Incorrect parameters. Try changing the parameters.".format(
-                MAX_SIMULATION_TIME
-            )
-        )
-        return ("Incorrect parameters".format(MAX_SIMULATION_TIME),) * 4
+        logger.info("Incorrect parameters. Try changing the parameters.")
+        return ("Incorrect parameters") * 4
 
 
 def run_all_simulations_and_save(data, driver, workbook, output_dir):
+    """Run all simulations and save the results to an excel file."""
     start = time.time()
     results_dict = {
         "Maximum Junction Temperature": {"Switch": [], "Diode": []},
@@ -115,9 +117,7 @@ def run_all_simulations_and_save(data, driver, workbook, output_dir):
             logger.info(
                 "--------------------------------------------------------------------"
             )
-            logger.info(
-                "Running simulation {} of {}".format(row_number + 1, number_of_rows)
-            )
+            logger.info("Running simulation %s of %s", row_number + 1, number_of_rows)
 
             url = generate_url(data, row_number)
             (
@@ -142,11 +142,12 @@ def run_all_simulations_and_save(data, driver, workbook, output_dir):
         driver.quit()
         finish = time.time()
         duration = finish - start
-        logger.info("Total simulation time: {:.1f} seconds".format(duration))
+        logger.info("Total simulation time: %.1f seconds", duration)
         logger.info("End of simulations")
 
 
 def inputs_ok(user, password, filename, output_dir):
+    """Check if the inputs are ok."""
     inputs_missing = []
     if filename == "No file selected" or not filename:
         inputs_missing.append("No input file selected")
