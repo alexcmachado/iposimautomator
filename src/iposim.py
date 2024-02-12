@@ -1,12 +1,13 @@
+"""Main module of the Iposim Automator application."""
+
 import os
 import platform
 import threading
-from tkinter import *
-from tkinter import messagebox
+import sys
+from tkinter import Frame, StringVar, messagebox, LEFT, X
 from tkinter.filedialog import askopenfilename, askdirectory
-from tkinter.ttk import *
-
-from ttkthemes import ThemedTk
+from tkinter.ttk import Style, Button, Entry, Label
+from ttkthemes import ThemedTk  # type: ignore
 
 from constants import NAME, BUILD_ICON_PATH
 from helper_functions.encryption import save_credentials, get_key, load_credentials
@@ -17,41 +18,52 @@ from web_scraper import simulation_pipeline
 
 
 def threaded_button_simulation():
+    """Starts the simulation in a separate thread."""
     if inputs_ok(
         user=user.get(),
         password=password.get(),
         filename=filename.get(),
         output_dir=output_dir.get(),
     ):
-        save_credentials(credentials_file_path=CREDENTIALS_FILE_PATH, key=key, password=password.get(),
-                         filename=filename.get(), output_dir=output_dir.get(), user=user.get())
+        save_credentials(
+            credentials_file_path=CREDENTIALS_FILE_PATH,
+            key=key,
+            password=password.get(),
+            filename=filename.get(),
+            output_dir=output_dir.get(),
+            user=user.get(),
+        )
         logger.info("Starting simulation, please wait...")
         threading.Thread(target=run_simulation, daemon=True).start()
 
 
 def run_simulation():
+    """Runs the simulation and disables the button while it is running."""
     try:
         sim_button.config(state="disabled")
         simulation_pipeline(
             user.get(), password.get(), filename.get(), output_dir.get()
         )
-    except Exception as e:
-        logger.error(e)
-        logger.debug(e, exc_info=sys.exc_info()) # printa mais informações para o arquivo de erro
+    except Exception as exc:  # pylint: disable=broad-except
+        logger.exception(exc)
+        logger.debug(exc, exc_info=sys.exc_info())
     finally:
         sim_button.config(state="normal")
 
 
 def on_closing():
+    """Manages closing of GUI."""
     if messagebox.askokcancel("Quit", "Do you want to quit?"):
         root.destroy()
 
 
 def browse_data():
+    """Opens a file explorer to select the data file."""
     filename.set(askopenfilename(initialdir=curr_dir, title="Select simulation file"))
 
 
 def get_output_dir():
+    """Opens a file explorer to select the output directory."""
     output_dir.set(askdirectory(initialdir=curr_dir, title="Select output path"))
 
 
@@ -79,8 +91,14 @@ KEY_FILE_PATH = f"{os.getenv('APPDATA')}/Iposim Automator/key.key"
 
 key = get_key(KEY_FILE_PATH)
 
-load_credentials(credentials_file_path=CREDENTIALS_FILE_PATH, key=key, password=password, filename=filename,
-                 output_dir=output_dir, user=user)
+load_credentials(
+    credentials_file_path=CREDENTIALS_FILE_PATH,
+    key=key,
+    password=password,
+    filename=filename,
+    output_dir=output_dir,
+    user=user,
+)
 
 mf = Frame(root)
 mf.pack(fill="both", expand=True)
@@ -95,11 +113,11 @@ login_info = Frame(master=mf)
 login_info.pack(fill=X)
 
 console = Frame(master=mf)
-console.pack(fill="both", expand="yes")
+console.pack(fill="both", expand=1)
 
 # cria um estilo novo de texto negrito que é usado pelo botao de simulate
 s = Style()
-s.configure("Bold.TButton", font = ('Sans','9','bold'))
+s.configure("Bold.TButton", font=("Sans", "9", "bold"))
 
 Label(login_info, text="Iposim e-mail:").pack(padx=4, pady=4, side=LEFT)
 Entry(login_info, textvariable=user, width=35).pack(padx=4, pady=4, side=LEFT)
@@ -110,7 +128,11 @@ Entry(login_info, textvariable=password, width=34, show="*").pack(
 )
 
 sim_button = Button(
-    login_info, text="Simulate", width=20, command=threaded_button_simulation, style="Bold.TButton"
+    login_info,
+    text="Simulate",
+    width=20,
+    command=threaded_button_simulation,
+    style="Bold.TButton",
 )
 sim_button.pack(fill="both", padx=4, pady=4, side=LEFT)
 

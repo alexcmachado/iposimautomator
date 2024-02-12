@@ -1,3 +1,5 @@
+"""Initialize logging module."""
+
 import logging
 import os
 import platform
@@ -8,6 +10,7 @@ from constants import MAX_LOG_FILE_SIZE, LOG_FILE_NAME
 
 
 def get_log_dir():
+    """Get the log directory for the current platform."""
     if platform.system() == "Windows":
         try:
             log_dir = os.environ["TMP"]
@@ -19,17 +22,18 @@ def get_log_dir():
 
 
 def logger_init():
-    LOG_DIR = get_log_dir()
-    LOG_FILE_PATH = os.path.join(LOG_DIR, LOG_FILE_NAME)
+    """Initialize logging module and return a logger."""
+    log_dir = get_log_dir()
+    log_file_path = os.path.join(log_dir, LOG_FILE_NAME)
 
-    if not os.path.isdir(LOG_DIR):
-        os.mkdir(LOG_DIR)
+    if not os.path.isdir(log_dir):
+        os.mkdir(log_dir)
 
     # create logger from root logger
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
     # create file handler which logs even debug messages
-    fh = RotatingFileHandler(LOG_FILE_PATH, maxBytes=MAX_LOG_FILE_SIZE, backupCount=4)
+    fh = RotatingFileHandler(log_file_path, maxBytes=MAX_LOG_FILE_SIZE, backupCount=4)
     fh.setLevel(logging.DEBUG)
     # create console handler with a higher log level
     ch = logging.StreamHandler(sys.stdout)

@@ -1,6 +1,8 @@
+"""Web scraper for the simulation pipeline."""
+
 import logging
 
-import openpyxl
+import openpyxl  # type: ignore
 
 from constants import LOGIN_PAGE
 from driver_initializer import driver_init
@@ -12,9 +14,9 @@ logger = logging.getLogger(__name__)
 
 
 def simulation_pipeline(user, password, filepath, output_dir):
+    """Run the simulation pipeline."""
     workbook = openpyxl.load_workbook(filepath)
     data = create_dict_from_excel(workbook=workbook)
     driver = driver_init()
     login(LOGIN_PAGE, user, password, driver)
-    run_all_simulations_and_save(data, driver, workbook, output_dir)
-
+    run_all_simulations_and_save(data, driver, workbook, output_dir, user, password)

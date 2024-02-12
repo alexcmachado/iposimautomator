@@ -1,3 +1,5 @@
+"""Implementation of the terminal UI using a scrolled text widget."""
+
 import logging
 import queue
 from tkinter.scrolledtext import ScrolledText
@@ -53,6 +55,7 @@ class ConsoleUi:
         self.frame.after(100, self.poll_log_queue)
 
     def display(self, record):
+        """Display a logging record in the scrolled text widget."""
         msg = self.queue_handler.format(record)
         self.scrolled_text.configure(state="normal")
         self.scrolled_text.insert(tk.END, msg + "\n", record.levelname)
@@ -61,7 +64,7 @@ class ConsoleUi:
         self.scrolled_text.yview(tk.END)
 
     def poll_log_queue(self):
-        # Check every 100ms if there is a new message in the queue to display
+        """Check every 100ms if there is a new message in the queue to display."""
         while True:
             try:
                 record = self.log_queue.get(block=False)
