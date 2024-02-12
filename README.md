@@ -1,37 +1,37 @@
 # Iposim Automator
 
-Este programa automatiza as simulações de perdas em semicondutores realizadas através do Iposim, ferramenta de simulação da empresa Infineon.
+This program automates semiconductor loss simulations performed through Iposim, a simulation tool from the Infineon company.
 
-As simulações são realizadas utilizando a topologia de inversor trifásico de 2 níveis, conforme a imagem abaixo:
+Simulations are conducted using the topology of a 2-level three-phase inverter, as shown in the image below:
 
-![](src/images/inverter.png)
+![Inverter Topology](src/images/inverter.png)
 
 ## Tutorial
 
-As instruções abaixo vão apresentar as informações necessárias para instalar e rodar o programa corretamente.
+The instructions below will provide the necessary information to install and run the program correctly.
 
-### Pré-requisitos
+### Prerequisites
 
-Para rodar esse programa é necessário ter o Mozilla Firefox versão 60 ou superior que pode ser baixado [neste link](https://www.mozilla.org/pt-BR/firefox/new/).
+To run this program, you need to have Mozilla Firefox version 60 or higher, which can be downloaded [here](https://www.mozilla.org/pt-BR/firefox/new/).
 
-### Instalação
+### Installation
 
-Baixe e instale o arquivo disponível [neste link](https://www.dropbox.com/sh/lt8700hnuhdy7km/AAAf3Y26jIrxC3CnyxlRQFg2a).
+Download and install the file available [here](https://www.dropbox.com/sh/lt8700hnuhdy7km/AAAf3Y26jIrxC3CnyxlRQFg2a).
 
-### Utilizando o programa
+### Using the program
 
-1. Abra o programa a partir do atalho gerado na área de trabalho.
+1. Open the program from the shortcut generated on the desktop.
 
-2. Utilizando o botão **"Select input file"**, selecione o arquivo com a tabela contendo as informações das simulações que deseja rodar. Um arquivo de exemplo é disponibilizado na pasta **"examples"** no local onde o programa foi instalado. É importante que os nomes das colunas pré-existentes no arquivo de simulação <ins>não sejam alterados</ins>. 
+2. Using the **"Select input file"** button, choose the file with the table containing the information for the simulations you want to run. An example file is provided in the **"examples"** folder where the program was installed. It is important that the names of the pre-existing columns in the simulation file <ins>are not changed</ins>.
 
-3. Utilize o botão **"Select output folder"** para definir em qual pasta será salvo o arquivo com os resultados de simulação.
+3. Use the **"Select output folder"** button to define the folder where the simulation results file will be saved.
 
-4. Insira seus dados de login do site do Iposim nos campos **"Iposim e-mail"** e **"Iposim password"**. Caso não tenha uma conta, é possível criar uma nova [neste link](https://www.infineon.com/cms/en/#register).
+4. Enter your Iposim website login details in the **"Iposim e-mail"** and **"Iposim password"** fields. If you don't have an account, you can create a new one [here](https://www.infineon.com/cms/en/#register).
 
-5. Após entrar com os dados, utilize o botão **"Simulate"** e aguarde a finalização da simulação observando as informações na tela. Ao final, o arquivo de resultados estará disponibilizado na pasta escolhida.
+5. After entering the data, use the **"Simulate"** button and wait for the simulation to finish, observing the information on the screen. At the end, the results file will be available in the chosen folder.
 
-![](src/images/example.png)
+![Example](src/images/example.png)
 
-## Autores
+## Authors
 
-* **Alex Costa Machado**
+- **Alex Costa Machado**
