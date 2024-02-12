@@ -2,7 +2,7 @@
 
 # package details
 NAME = "Iposim Automator"
-VERSION = "2.0"
+VERSION = "3.0.0"
 DESCRIPTION = "An automated Iposim simulator"
 AUTHOR = "Alex Costa Machado"
 BUILD_ICON_PATH = "./src/images/iposim.ico"
