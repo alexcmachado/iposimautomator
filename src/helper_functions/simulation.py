@@ -3,6 +3,7 @@
 import logging
 import time
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver import ActionChains
 
 from constants import MAX_SIMULATION_TIME
 from helper_functions.data import generate_url, append_results_and_save
@@ -24,9 +25,8 @@ def check_for_empty_page(driver):
     try:
         wait_and_get_element(
             "#app > div.application--wrap > main > div > div > div > "
-            "div.flex.main-container.xs12 > div.container.fluid.tabs__results > "
-            "div > div.flex.content.content-large > div.layout.mt-2.mx-1.row.wrap "
-            "> div:nth-child(1) > div > div.flex.md5.xs12.mx-0 > div > img",
+            "div > div.container.fluid.tabs__results > div > div > div > "
+            "div:nth-child(1) > div > div.flex.md5.xs12.mx-0 > div > img",
             time_to_wait=30,
             driver=driver,
         )
@@ -48,17 +48,17 @@ def check_for_results_table(driver):
 
 def get_results(driver):
     """Get the results from the simulation results page."""
-    temp_switch = driver.find_element_by_css_selector(
-        get_css_from_table("Maximum Junction Temperature", "Switch")
+    temp_switch = driver.find_element(
+        "css selector", get_css_from_table("Maximum Junction Temperature", "Switch")
     )
-    temp_diode = driver.find_element_by_css_selector(
-        get_css_from_table("Maximum Junction Temperature", "Diode")
+    temp_diode = driver.find_element(
+        "css selector", get_css_from_table("Maximum Junction Temperature", "Diode")
     )
-    loss_switch = driver.find_element_by_css_selector(
-        get_css_from_table("Total Losses", "Switch")
+    loss_switch = driver.find_element(
+        "css selector", get_css_from_table("Total Losses", "Switch")
     )
-    loss_diode = driver.find_element_by_css_selector(
-        get_css_from_table("Total Losses", "Diode")
+    loss_diode = driver.find_element(
+        "css selector", get_css_from_table("Total Losses", "Diode")
     )
 
     temp_switch = float(temp_switch.text[:-3])
@@ -77,10 +77,24 @@ def get_results(driver):
     return temp_switch, temp_diode, loss_switch, loss_diode
 
 
-def create_simulation_and_retrieve_result(url, driver):
+def create_simulation_and_retrieve_result(url, driver, user, password):
     """Create a simulation and retrieve the results."""
     try:
         driver.get(url)
+
+        wait_and_get_element(".image-fluid", driver=driver)
+        username_field = wait_and_get_element("#identifierInput", driver=driver)
+        username_field.send_keys(user)
+
+        button = wait_and_get_element("#btnOk", driver=driver)
+        ActionChains(driver).move_to_element(button).click(button).perform()
+
+        password_field = wait_and_get_element("#password", driver=driver)
+        password_field.send_keys(password)
+
+        button = driver.find_element("css selector", "#btnOk")
+        ActionChains(driver).move_to_element(button).click(button).perform()
+
         check_for_empty_page(driver)
         check_for_results_table(driver)
         return get_results(driver)
@@ -101,10 +115,10 @@ def create_simulation_and_retrieve_result(url, driver):
             "--------------------------------------------------------------------\nResults:"
         )
         logger.info("Incorrect parameters. Try changing the parameters.")
-        return ("Incorrect parameters") * 4
+        return ("Incorrect parameters",) * 4
 
 
-def run_all_simulations_and_save(data, driver, workbook, output_dir):
+def run_all_simulations_and_save(data, driver, workbook, output_dir, user, password):
     """Run all simulations and save the results to an excel file."""
     start = time.time()
     results_dict = {
@@ -125,7 +139,7 @@ def run_all_simulations_and_save(data, driver, workbook, output_dir):
                 temp_diode,
                 loss_switch,
                 loss_diode,
-            ) = create_simulation_and_retrieve_result(url, driver)
+            ) = create_simulation_and_retrieve_result(url, driver, user, password)
 
             results_dict["Maximum Junction Temperature"]["Switch"].append(temp_switch)
             results_dict["Maximum Junction Temperature"]["Diode"].append(temp_diode)
@@ -133,7 +147,7 @@ def run_all_simulations_and_save(data, driver, workbook, output_dir):
             results_dict["Total Losses"]["Diode"].append(loss_diode)
 
     except Exception:
-        logger.error(
+        logger.exception(
             "An error occurred during the simulations, ending it earlier and generating results..."
         )
         raise

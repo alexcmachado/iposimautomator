@@ -44,9 +44,9 @@ def run_simulation():
         simulation_pipeline(
             user.get(), password.get(), filename.get(), output_dir.get()
         )
-    except Exception as e:  # pylint: disable=broad-except
-        logger.error(e)
-        logger.debug(e, exc_info=sys.exc_info())
+    except Exception as exc:  # pylint: disable=broad-except
+        logger.exception(exc)
+        logger.debug(exc, exc_info=sys.exc_info())
     finally:
         sim_button.config(state="normal")
 

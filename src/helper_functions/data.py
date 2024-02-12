@@ -26,13 +26,21 @@ def generate_url(df, row_number):
         gate_res = str(df["Gate Resistor [Ohm]"][row_number])
         url = (
             "https://iposim.infineon.com/application/en/results?"
-            f"topology:DC-AC_3P_2L,inputs:(mod_scheme:2,Vdc:{dc_voltage},"
-            f"Vblock:{blocking_voltage},Irms:{current},fout:{output_frequency},"
-            f"fsw:{sw_frequency},t_pulse:180,modi:{modi},cos_phi:{power_factor},"
-            f"load_cycle:False),devices:({module}:(thermal:(model:3,Tc:{hs_temp}),"
-            f"advanced:(Rgon_1:{gate_res},Rgoff_1:{gate_res}))),diode:(),"
-            f"package:All,search:{module},isOld:0,appdatatab:tab-advanced,"
-            "interpolation:!t,cycle_defined:!f,cycle_count:5,sim_bvr:1,mode:normal,lcp:none "
+            f"topology:DC-AC_3P_2L,simType:steady-state,appDataTab:tab-advanced,"
+            f"loadcycle:(lcp:none,filename:none),common:(Vdc_d:{dc_voltage},"
+            f"Vblock:{blocking_voltage},Inom:{current},package:All,mod_scheme:1,"
+            f"Vdc:{dc_voltage},Irms:{current},fout:{output_frequency},fsw:{sw_frequency},"
+            f"t_pulse:180,modi:{modi},cos_phi:{power_factor},cos_phi_sign:2,"
+            f"Parts:{module},Tref:{hs_temp},good_voltage_threshold:420),"
+            f"setups:(Setup%201:(primary_device:{module},heatsink_model:3,"
+            f"heatsink_coefficient:0.5,cooling_method:2,heatsink:3,ph_Ta:40,"
+            f"Rth_ca:0.63,ph_tau:40,ud_Ta:40,Rth:!((Rth:0.36,Tao:70),(Rth:0,Tao:1),"
+            f"(Rth:0,Tao:1),(Rth:0,Tao:1),(Rth:0,Tao:1)),t_heatsink:{hs_temp},"
+            f"cooling_method_atv:1,flow_rate:!n,t_coolant:65,advanced_param_options:standard,"
+            f"Switch1Rgon:{gate_res},Switch1Rgoff:{gate_res},r_g_on_fast:{gate_res},"
+            f"r_g_on_slow:{gate_res},r_g_off_fast:{gate_res},r_g_off_slow:{gate_res},"
+            f"i_2l_src:10,Rgon_slow:{gate_res},Rgoff_slow:{gate_res},Switch1TvjopMax:150,"
+            f"Diode1TvjopMax:150,Switch1Inom:100))"
         )
         logger.info(
             "--------------------------------------------------------------------\nParameters:"

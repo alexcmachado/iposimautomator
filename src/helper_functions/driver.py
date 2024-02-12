@@ -19,11 +19,11 @@ def wait_and_get_element(css_selector=None, time_to_wait=30, driver=None):
 def get_css_from_table(table_header, table_index):
     """Get the css selector for the table in the simulation results page."""
     table_header_dict = {
-        "headers": {"Maximum Junction Temperature": 1, "Total Losses": 4},
+        "headers": {"Maximum Junction Temperature": 2, "Total Losses": 5},
         "indexes": {"Switch": 1, "Diode": 2},
     }
     return (
-        "#content-solution > td > table:nth-child(2) > tr:nth-child(2) > td > div > ul > "
+        "#content-solution > td > table:nth-child(2) > tr:nth-child(3) > td > div > ul > "
         "li.v-expansion-panel__container.v-expansion-panel__container--active > "
         "div.v-expansion-panel__body > div > div > table > "
         f"tr:nth-child({table_header_dict["headers"][table_header]}) > td > div > "

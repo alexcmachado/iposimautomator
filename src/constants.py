@@ -11,7 +11,7 @@ BUILD_ICON_PATH = "./src/images/iposim.ico"
 # HEADLESS = True
 # WITH_PROXY = False
 MAX_SIMULATION_TIME = 300
-PAGE_LOAD_TIMEOUT = 15
+PAGE_LOAD_TIMEOUT = 120
 LOGIN_PAGE = r"https://iposim.infineon.com/application"
 
 # logging

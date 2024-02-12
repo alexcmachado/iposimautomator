@@ -19,4 +19,4 @@ def simulation_pipeline(user, password, filepath, output_dir):
     data = create_dict_from_excel(workbook=workbook)
     driver = driver_init()
     login(LOGIN_PAGE, user, password, driver)
-    run_all_simulations_and_save(data, driver, workbook, output_dir)
+    run_all_simulations_and_save(data, driver, workbook, output_dir, user, password)
