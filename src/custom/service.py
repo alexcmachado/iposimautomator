@@ -28,6 +28,7 @@ from selenium.webdriver.common import utils
 
 try:
     from subprocess import DEVNULL
+
     _HAS_NATIVE_DEVNULL = True
 except ImportError:
     DEVNULL = -3
@@ -36,7 +37,9 @@ except ImportError:
 
 class CommonService(object):
 
-    def __init__(self, executable, port=0, log_file=DEVNULL, env=None, start_error_message=""):
+    def __init__(
+        self, executable, port=0, log_file=DEVNULL, env=None, start_error_message=""
+    ):
         self.path = executable
 
         self.port = port
@@ -44,7 +47,7 @@ class CommonService(object):
             self.port = utils.free_port()
 
         if not _HAS_NATIVE_DEVNULL and log_file == DEVNULL:
-            log_file = open(os.devnull, 'wb')
+            log_file = open(os.devnull, "wb")
 
         self.start_error_message = start_error_message
         self.log_file = log_file
@@ -55,7 +58,7 @@ class CommonService(object):
         """
         Gets the url of the Service
         """
-        return "http://%s" % utils.join_host_port('localhost', self.port)
+        return "http://%s" % utils.join_host_port("localhost", self.port)
 
     def command_line_args(self):
         raise NotImplemented("This method needs to be implemented in a sub class")
@@ -71,32 +74,35 @@ class CommonService(object):
         try:
             cmd = [self.path]
             cmd.extend(self.command_line_args())
-            self.process = subprocess.Popen(cmd, env=self.env,
-                                            close_fds=platform.system() != 'Windows',
-                                            stdout=self.log_file,
-                                            stderr=self.log_file,
-                                            stdin=PIPE,
-                                            creationflags=0x08000000,
-                                            )
+            self.process = subprocess.Popen(
+                cmd,
+                env=self.env,
+                close_fds=platform.system() != "Windows",
+                stdout=self.log_file,
+                stderr=self.log_file,
+                stdin=PIPE,
+                creationflags=0x08000000,
+            )
         except TypeError:
             raise
         except OSError as err:
             if err.errno == errno.ENOENT:
                 raise WebDriverException(
-                    "'%s' executable needs to be in PATH. %s" % (
-                        os.path.basename(self.path), self.start_error_message)
+                    "'%s' executable needs to be in PATH. %s"
+                    % (os.path.basename(self.path), self.start_error_message)
                 )
             elif err.errno == errno.EACCES:
                 raise WebDriverException(
-                    "'%s' executable may have wrong permissions. %s" % (
-                        os.path.basename(self.path), self.start_error_message)
+                    "'%s' executable may have wrong permissions. %s"
+                    % (os.path.basename(self.path), self.start_error_message)
                 )
             else:
                 raise
         except Exception as e:
             raise WebDriverException(
-                "The executable %s needs to be available in the path. %s\n%s" %
-                (os.path.basename(self.path), self.start_error_message, str(e)))
+                "The executable %s needs to be available in the path. %s\n%s"
+                % (os.path.basename(self.path), self.start_error_message, str(e))
+            )
         count = 0
         while True:
             self.assert_process_still_running()
@@ -105,13 +111,15 @@ class CommonService(object):
             count += 1
             time.sleep(1)
             if count == 30:
-                raise WebDriverException("Can not connect to the Service %s" % self.path)
+                raise WebDriverException(
+                    "Can not connect to the Service %s" % self.path
+                )
 
     def assert_process_still_running(self):
         return_code = self.process.poll()
         if return_code is not None:
             raise WebDriverException(
-                'Service %s unexpectedly exited. Status code was: %s'
+                "Service %s unexpectedly exited. Status code was: %s"
                 % (self.path, return_code)
             )
 
@@ -121,10 +129,12 @@ class CommonService(object):
     def send_remote_shutdown_command(self):
         try:
             from urllib import request as url_request
+
             URLError = url_request.URLError
         except ImportError:
             import urllib2 as url_request
             import urllib2
+
             URLError = urllib2.URLError
 
         try:
@@ -142,7 +152,9 @@ class CommonService(object):
         """
         Stops the service.
         """
-        if self.log_file != PIPE and not (self.log_file == DEVNULL and _HAS_NATIVE_DEVNULL):
+        if self.log_file != PIPE and not (
+            self.log_file == DEVNULL and _HAS_NATIVE_DEVNULL
+        ):
             try:
                 self.log_file.close()
             except Exception:
@@ -158,9 +170,11 @@ class CommonService(object):
 
         try:
             if self.process:
-                for stream in [self.process.stdin,
-                               self.process.stdout,
-                               self.process.stderr]:
+                for stream in [
+                    self.process.stdin,
+                    self.process.stdout,
+                    self.process.stderr,
+                ]:
                     try:
                         stream.close()
                     except AttributeError:
@@ -186,8 +200,14 @@ class Service(CommonService):
     """Object that manages the starting and stopping of the
     GeckoDriver."""
 
-    def __init__(self, executable_path, port=0, service_args=None,
-                 log_path="geckodriver.log", env=None):
+    def __init__(
+        self,
+        executable_path,
+        port=0,
+        service_args=None,
+        log_path="geckodriver.log",
+        env=None,
+    ):
         """Creates a new instance of the GeckoDriver remote service proxy.
 
         GeckoDriver provides a HTTP interface speaking the W3C WebDriver
@@ -205,10 +225,13 @@ class Service(CommonService):
             in the services' environment.
 
         """
-        log_file = open(log_path, "a+") if log_path is not None and log_path != "" else None
+        log_file = (
+            open(log_path, "a+") if log_path is not None and log_path != "" else None
+        )
 
         CommonService.__init__(
-            self, executable_path, port=port, log_file=log_file, env=env)
+            self, executable_path, port=port, log_file=log_file, env=env
+        )
         self.service_args = service_args or []
 
     def command_line_args(self):

@@ -14,4 +14,4 @@ LOGIN_PAGE = r"https://iposim.infineon.com/application?_ga=2.60453613.1359059266
 
 # logging
 LOG_FILE_NAME = "iposim.log"
-MAX_LOG_FILE_SIZE = 5 * 10 ** 6  # in mb
+MAX_LOG_FILE_SIZE = 5 * 10**6  # in mb

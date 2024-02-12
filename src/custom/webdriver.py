@@ -47,12 +47,22 @@ class WebDriver(RemoteWebDriver):
 
     _web_element_cls = FirefoxWebElement
 
-    def __init__(self, firefox_profile=None, firefox_binary=None,
-                 timeout=30, capabilities=None, proxy=None,
-                 executable_path="geckodriver", options=None,
-                 service_log_path="geckodriver.log", firefox_options=None,
-                 service_args=None, desired_capabilities=None, log_path=None,
-                 keep_alive=True):
+    def __init__(
+        self,
+        firefox_profile=None,
+        firefox_binary=None,
+        timeout=30,
+        capabilities=None,
+        proxy=None,
+        executable_path="geckodriver",
+        options=None,
+        service_log_path="geckodriver.log",
+        firefox_options=None,
+        service_args=None,
+        desired_capabilities=None,
+        log_path=None,
+        keep_alive=True,
+    ):
         """Starts a new local session of Firefox.
 
         Based on the combination and specificity of the various keyword
@@ -106,12 +116,18 @@ class WebDriver(RemoteWebDriver):
              HTTP keep-alive.
         """
         if log_path:
-            warnings.warn('use service_log_path instead of log_path',
-                          DeprecationWarning, stacklevel=2)
+            warnings.warn(
+                "use service_log_path instead of log_path",
+                DeprecationWarning,
+                stacklevel=2,
+            )
             service_log_path = log_path
         if firefox_options:
-            warnings.warn('use options instead of firefox_options',
-                          DeprecationWarning, stacklevel=2)
+            warnings.warn(
+                "use options instead of firefox_options",
+                DeprecationWarning,
+                stacklevel=2,
+            )
             options = firefox_options
         self.binary = None
         self.profile = None
@@ -158,20 +174,21 @@ class WebDriver(RemoteWebDriver):
         if capabilities.get("marionette"):
             capabilities.pop("marionette")
             self.service = Service(
-                executable_path,
-                service_args=service_args,
-                log_path=service_log_path)
+                executable_path, service_args=service_args, log_path=service_log_path
+            )
             self.service.start()
 
             capabilities.update(options.to_capabilities())
 
             executor = FirefoxRemoteConnection(
-                remote_server_addr=self.service.service_url)
+                remote_server_addr=self.service.service_url
+            )
             RemoteWebDriver.__init__(
                 self,
                 command_executor=executor,
                 desired_capabilities=capabilities,
-                keep_alive=True)
+                keep_alive=True,
+            )
 
         # Selenium remote
         else:
@@ -182,18 +199,21 @@ class WebDriver(RemoteWebDriver):
 
             # disable native events if globally disabled
             self.profile.native_events_enabled = (
-                self.NATIVE_EVENTS_ALLOWED and self.profile.native_events_enabled)
+                self.NATIVE_EVENTS_ALLOWED and self.profile.native_events_enabled
+            )
 
             if proxy is not None:
                 proxy.add_to_capabilities(capabilities)
 
-            executor = ExtensionConnection("127.0.0.1", self.profile,
-                                           self.binary, timeout)
+            executor = ExtensionConnection(
+                "127.0.0.1", self.profile, self.binary, timeout
+            )
             RemoteWebDriver.__init__(
                 self,
                 command_executor=executor,
                 desired_capabilities=capabilities,
-                keep_alive=keep_alive)
+                keep_alive=keep_alive,
+            )
 
         self._is_remote = False
 
@@ -242,7 +262,7 @@ class WebDriver(RemoteWebDriver):
                 # chrome scope
                 ... do stuff ...
         """
-        initial_context = self.execute('GET_CONTEXT').pop('value')
+        initial_context = self.execute("GET_CONTEXT").pop("value")
         self.set_context(context)
         try:
             yield

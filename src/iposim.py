@@ -23,8 +23,14 @@ def threaded_button_simulation():
         filename=filename.get(),
         output_dir=output_dir.get(),
     ):
-        save_credentials(credentials_file_path=CREDENTIALS_FILE_PATH, key=key, password=password.get(),
-                         filename=filename.get(), output_dir=output_dir.get(), user=user.get())
+        save_credentials(
+            credentials_file_path=CREDENTIALS_FILE_PATH,
+            key=key,
+            password=password.get(),
+            filename=filename.get(),
+            output_dir=output_dir.get(),
+            user=user.get(),
+        )
         logger.info("Starting simulation, please wait...")
         threading.Thread(target=run_simulation, daemon=True).start()
 
@@ -37,7 +43,9 @@ def run_simulation():
         )
     except Exception as e:
         logger.error(e)
-        logger.debug(e, exc_info=sys.exc_info()) # printa mais informações para o arquivo de erro
+        logger.debug(
+            e, exc_info=sys.exc_info()
+        )  # printa mais informações para o arquivo de erro
     finally:
         sim_button.config(state="normal")
 
@@ -79,8 +87,14 @@ KEY_FILE_PATH = f"{os.getenv('APPDATA')}/Iposim Automator/key.key"
 
 key = get_key(KEY_FILE_PATH)
 
-load_credentials(credentials_file_path=CREDENTIALS_FILE_PATH, key=key, password=password, filename=filename,
-                 output_dir=output_dir, user=user)
+load_credentials(
+    credentials_file_path=CREDENTIALS_FILE_PATH,
+    key=key,
+    password=password,
+    filename=filename,
+    output_dir=output_dir,
+    user=user,
+)
 
 mf = Frame(root)
 mf.pack(fill="both", expand=True)
@@ -99,7 +113,7 @@ console.pack(fill="both", expand="yes")
 
 # cria um estilo novo de texto negrito que é usado pelo botao de simulate
 s = Style()
-s.configure("Bold.TButton", font = ('Sans','9','bold'))
+s.configure("Bold.TButton", font=("Sans", "9", "bold"))
 
 Label(login_info, text="Iposim e-mail:").pack(padx=4, pady=4, side=LEFT)
 Entry(login_info, textvariable=user, width=35).pack(padx=4, pady=4, side=LEFT)
@@ -110,7 +124,11 @@ Entry(login_info, textvariable=password, width=34, show="*").pack(
 )
 
 sim_button = Button(
-    login_info, text="Simulate", width=20, command=threaded_button_simulation, style="Bold.TButton"
+    login_info,
+    text="Simulate",
+    width=20,
+    command=threaded_button_simulation,
+    style="Bold.TButton",
 )
 sim_button.pack(fill="both", padx=4, pady=4, side=LEFT)
 

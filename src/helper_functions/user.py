@@ -6,8 +6,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class UnableToLogin(Exception):
     pass
+
 
 def login(login_page, user, password, driver):
     try:
@@ -28,7 +30,10 @@ def login(login_page, user, password, driver):
             "body > div > div.ping-body-container > div:nth-child(1) > form > div.ping-buttons > a"
         )
         ActionChains(driver).move_to_element(button).click(button).perform()
-        button = wait_and_get_element("button.btn:nth-child(2)", driver=driver,)
+        button = wait_and_get_element(
+            "button.btn:nth-child(2)",
+            driver=driver,
+        )
         button.click()
         logger.info("Iposim authentication successful.")
         logger.info(
@@ -42,4 +47,6 @@ def login(login_page, user, password, driver):
         """
         )
     except TimeoutException:
-        raise UnableToLogin("Unable to establish login. Check your e-mail and password or internet connection and try again.")
+        raise UnableToLogin(
+            "Unable to establish login. Check your e-mail and password or internet connection and try again."
+        )

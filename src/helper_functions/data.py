@@ -61,7 +61,9 @@ def generate_url(df, row_number):
         )
         return url
     except KeyError as e:
-        raise ColumnUnavailable(f"Column {e} not found, please correct the column name on the input file and retry.")
+        raise ColumnUnavailable(
+            f"Column {e} not found, please correct the column name on the input file and retry."
+        )
 
 
 def create_dict_from_excel(workbook):

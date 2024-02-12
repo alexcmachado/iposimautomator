@@ -23,14 +23,17 @@ def driver_init():
     driver_name = "geckodriver"
     driver_options = firefox_opt()
     kwargs.update(
-        {"firefox_options": driver_options, "service_log_path": log_dir,}
+        {
+            "firefox_options": driver_options,
+            "service_log_path": log_dir,
+        }
     )
 
     driver_options.add_argument("--no-sandbox")
 
-    with open('./src/config.json') as config_file:
+    with open("./src/config.json") as config_file:
         config = json.load(config_file)
-        headless = config['headless']
+        headless = config["headless"]
 
     if headless:
         driver_options.add_argument("--headless")
@@ -47,7 +50,9 @@ def driver_init():
     try:
         driver = driver_class(**kwargs)
     except SessionNotCreatedException:
-        raise SessionNotCreatedException("Please try installing Mozilla Firefox version 60 or higher to run this application")
+        raise SessionNotCreatedException(
+            "Please try installing Mozilla Firefox version 60 or higher to run this application"
+        )
 
     driver.set_page_load_timeout(PAGE_LOAD_TIMEOUT)
     return driver

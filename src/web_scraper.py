@@ -17,4 +17,3 @@ def simulation_pipeline(user, password, filepath, output_dir):
     driver = driver_init()
     login(LOGIN_PAGE, user, password, driver)
     run_all_simulations_and_save(data, driver, workbook, output_dir)
-

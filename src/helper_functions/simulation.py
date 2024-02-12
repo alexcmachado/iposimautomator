@@ -18,7 +18,7 @@ class SimulationTookTooLongError(Exception):
 
 
 def check_for_empty_page(driver):
-    """ procura pelo grafico """
+    """procura pelo grafico"""
     try:
         wait_and_get_element(
             "#app > div.application--wrap > main > div > div > div > div.flex.main-container.xs12 > "
@@ -32,7 +32,7 @@ def check_for_empty_page(driver):
 
 
 def check_for_results_table(driver):
-    """ procura pela tabela de resultados no tempo maximo dado por MAX_SIMULATION_TIME """
+    """procura pela tabela de resultados no tempo maximo dado por MAX_SIMULATION_TIME"""
     try:
         wait_and_get_element(
             ".sim-main-content > div:nth-child(3) > div:nth-child(1) > img:nth-child(2)",
@@ -89,8 +89,8 @@ def create_simulation_and_retrieve_result(url, driver):
             )
         )
         return (
-                   "Simulation lasted longer than {} seconds".format(MAX_SIMULATION_TIME),
-               ) * 4
+            "Simulation lasted longer than {} seconds".format(MAX_SIMULATION_TIME),
+        ) * 4
     except ParametersNotOkError:
         logger.info(
             "--------------------------------------------------------------------\nResults:"
