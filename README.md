@@ -12,11 +12,11 @@ The instructions below will provide the necessary information to install and run
 
 ### Prerequisites
 
-To run this program, you need to have Mozilla Firefox version 60 or higher, which can be downloaded [here](https://www.mozilla.org/pt-BR/firefox/new/).
+To run this program, you need to have Mozilla Firefox version 115 or higher, which can be downloaded [here](https://www.mozilla.org/pt-BR/firefox/new/).
 
 ### Installation
 
-Download and install the file available [here](https://www.dropbox.com/sh/lt8700hnuhdy7km/AAAf3Y26jIrxC3CnyxlRQFg2a).
+Download and install the latest release of the setup file available [here](https://github.com/alexcmachado/IposimAutomator/releases).
 
 ### Using the program
 
