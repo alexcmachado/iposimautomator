@@ -1,10 +1,10 @@
+"""Setup for Iposim Automator."""
+
 import sys
-sys.path.append('./src')
+from cx_Freeze import setup, Executable  # type: ignore
+from src.constants import BUILD_ICON_PATH, NAME, VERSION, DESCRIPTION, AUTHOR  # type: ignore
 
-from cx_Freeze import setup, Executable
-
-from constants import BUILD_ICON_PATH, NAME, VERSION, DESCRIPTION, AUTHOR
-
+sys.path.append("./src")
 
 include_files = [
     "./src/drivers/geckodriver.exe",
@@ -37,19 +37,19 @@ shortcut_table = [
     )
 ]
 
-# controla o que aparece no control panel
+# controls what appears on control panel
 bdist_msi_options = {
     "install_icon": BUILD_ICON_PATH,
     "data": {"Shortcut": shortcut_table},
 }
 
-# para que nao abra o CMD quando executar o exe
-base = None
+# disable terminal when executing .exe file
+BASE = None
 if sys.platform == "win32":
-    base = "Win32GUI"
+    BASE = "Win32GUI"
 
-shortcutName = NAME
-shortcutDir = "DesktopFolder"
+SHORTCUT_NAME = NAME
+SHORTCUT_DIR = "DesktopFolder"
 
 
 setup(
@@ -61,10 +61,10 @@ setup(
     executables=[
         Executable(
             "./src/iposim.py",
-            base=base,
-            shortcutName=shortcutName,
-            shortcutDir=shortcutDir,
+            base=BASE,
+            shortcutName=SHORTCUT_NAME,
+            shortcutDir=SHORTCUT_DIR,
             icon=BUILD_ICON_PATH,
         )
-    ],  # icon controla o que aparece no desktop
+    ],  # icon controls what shows up on desktop
 )
