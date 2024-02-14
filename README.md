@@ -16,7 +16,7 @@ To run this program, you need to have Mozilla Firefox version 115 or higher, whi
 
 ### Installation
 
-Download and install the latest release of the setup file available [here](https://github.com/alexcmachado/IposimAutomator/releases).
+Download and install the latest release of the setup file available [here](https://github.com/alexcmachado/IposimAutomator/releases/latest).
 
 ### Using the program
 
