@@ -62,8 +62,8 @@ setup(
         Executable(
             "./src/iposim.py",
             base=BASE,
-            shortcutName=SHORTCUT_NAME,
-            shortcutDir=SHORTCUT_DIR,
+            shortcut_name=SHORTCUT_NAME,
+            shortcut_dir=SHORTCUT_DIR,
             icon=BUILD_ICON_PATH,
         )
     ],  # icon controls what shows up on desktop
